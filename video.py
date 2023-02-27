@@ -15,7 +15,7 @@ with open("rejected_video_ids.txt", "r") as f:
 video_ids = [id for id in video_ids if id not in approved_video_ids and id not in rejected_video_ids]
 
 # Set the batch size
-batch_size = 2
+batch_size = 100
 
 # Play the videos and prompt for approval in batches
 for i in range(0, len(video_ids), batch_size):
@@ -34,10 +34,20 @@ for i in range(0, len(video_ids), batch_size):
             if decision == "a":
                 approved_video_ids.add(video_id)
                 video_ids.remove(video_id) 
+                with open("video_ids.txt", "w") as f:
+                    f.write("\n".join(video_ids))
+                # Write the approved and rejected video IDs to separate files
+                with open("approved_video_ids.txt", "w") as f:
+                    f.write("\n".join(approved_video_ids))
                 break
             elif decision == "r":
                 rejected_video_ids.add(video_id)
                 video_ids.remove(video_id) 
+                with open("video_ids.txt", "w") as f:
+                    f.write("\n".join(video_ids))
+                # Write the approved and rejected video IDs to separate files
+                with open("rejected_video_ids.txt", "w") as f:
+                    f.write("\n".join(rejected_video_ids))
                 break
             elif decision == "s":
                 break
@@ -51,13 +61,6 @@ for i in range(0, len(video_ids), batch_size):
             break
 
 # Write the updated video IDs back to the source file
-with open("video_ids.txt", "w") as f:
-    f.write("\n".join(video_ids))
-# Write the approved and rejected video IDs to separate files
-with open("approved_video_ids.txt", "w") as f:
-    f.write("\n".join(approved_video_ids))
 
-with open("rejected_video_ids.txt", "w") as f:
-    f.write("\n".join(rejected_video_ids))
 
 print("Processing complete.")
